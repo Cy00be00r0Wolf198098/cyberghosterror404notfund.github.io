@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سایت شخصی من | CyberGhost</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #12121a;
+    --primary: #00ffc8;
+    --secondary: #7b5cff;
+    --accent: #ff3d81;
+    --text: #e8e8f0;
+    --muted: #8a8a9e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.8;
+  }
+
+  /* ===== پس‌زمینه متحرک ===== */
+  .bg-anim {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .bg-anim::before, .bg-anim::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.35;
+    animation: float 15s infinite ease-in-out;
+  }
+  .bg-anim::before {
+    background: var(--primary);
+    top: -100px;
+    right: -100px;
+  }
+  .bg-anim::after {
+    background: var(--secondary);
+    bottom: -100px;
+    left: -100px;
+    animation-delay: -7s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-80px, 80px) scale(1.2); }
+  }
+
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(0,255,200,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,200,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  }
+
+  /* ===== نویگیشن ===== */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 18px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
+  }
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 35px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    transition: 0.3s;
+  }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: 0.3s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  .menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* ===== هیرو ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 5%;
+    position: relative;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: rgba(0,255,200,0.08);
+    border: 1px solid rgba(0,255,200,0.25);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-bottom: 30px;
+    animation: fadeDown 0.8s ease;
+  }
+  .badge .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    animation: fadeDown 0.8s ease 0.1s backwards;
+  }
+  .hero h1 .gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 4s ease infinite;
+  }
+  @keyframes gradientMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero p {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--muted);
+    max-width: 650px;
+    margin-bottom: 40px;
+    animation: fadeDown 0.8s ease 0.2s backwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeDown 0.8s ease 0.3s backwards;
+  }
+
+  .btn {
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #0a0a0f;
+    box-shadow: 0 10px 40px rgba(0,255,200,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 50px rgba(0,255,200,0.5);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-4px);
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== اسکرول ایندیکیتور ===== */
+  .scroll-down {
+    position: absolute;
+    bottom: 40px;
+    animation: bounce 2s infinite;
+    color: var(--muted);
+    font-size: 1.5rem;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
+
+  /* ===== سکشن‌ها ===== */
+  section {
+    padding: 120px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+  .section-title span {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .section-title h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    margin-top: 12px;
+  }
+
+  /* ===== کارت‌های ویژگی ===== */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+  }
+  .card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 40px 30px;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: 0.4s;
+  }
+  .card:hover::before { transform: scaleX(1); }
+  .card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(0,255,200,0.3);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0,255,200,0.15), rgba(123,92,255,0.15));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 22px;
+  }
+  .card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* ===== آمار ===== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    background: linear-gradient(135deg, rgba(0,255,200,0.05), rgba(123,92,255,0.05));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 30px;
+    padding: 60px 40px;
+  }
+  .stat { text-align: center; }
+  .stat h3 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat p { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+
+  /* ===== فرم تماس ===== */
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+  }
+  .contact-info h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+  }
+  .contact-info p { color: var(--muted); margin-bottom: 30px; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+    color: var(--muted);
+  }
+  .contact-item .ico {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: rgba(0,255,200,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  form input, form textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 16px 20px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: 0.3s;
+    outline: none;
+  }
+  form input:focus, form textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0,255,200,0.1);
+  }
+  form textarea { resize: vertical; min-height: 130px; }
+  form button { align-self: flex-start; }
+
+  /* ===== فوتر ===== */
+  footer {
+    text-align: center;
+    padding: 50px 5%;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  footer .socials {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  footer .socials a {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 1.2rem;
+  }
+  footer .socials a:hover {
+    background: var(--primary);
+    color: #0a0a0f;
+    transform: translateY(-5px);
+  }
+
+  /* ===== انیمیشن ورود با اسکرول ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== ریسپانسیو ===== */
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed;
+      top: 70px;
+      right: -100%;
+      flex-direction: column;
+      background: rgba(10,10,15,0.98);
+      width: 100%;
+      padding: 40px;
+      gap: 25px;
+      transition: 0.4s;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-links.open { right: 0; }
+    .menu-btn { display: block; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 80px 6%; }
+  }
+
+  /* ===== اسکرول‌بار ===== */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--primary), var(--secondary));
+    border-radius: 10px;
+  }
+  ::selection { background: var(--primary); color: #0a0a0f; }
+</style>
+</head>
+<body>
+
+<div class="bg-anim"></div>
+<div class="grid-overlay"></div>
+
+<!-- ===== نویگیشن ===== -->
+<nav id="navbar">
+  <div class="logo">&lt;CYBER /&gt;</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">خانه</a></li>
+    <li><a href="#features">ویژگی‌ها</a></li>
+    <li><a href="#stats">آمار</a></li>
+    <li><a href="#contact">تماس</a></li>
+  </ul>
+  <button class="menu-btn" id="menuBtn">☰</button>
+</nav>
+
+<!-- ===== هیرو ===== -->
+<section class="hero" id="home">
+  <div class="badge">
+    <span class="dot"></span>
+    آماده همکاری و پروژه جدید
+  </div>
+  <h1>
+    به دنیای <span class="gradient">خلاقیت دیجیتال</span><br>
+    خوش آمدی
+  </h1>
+  <p>
+    اینجا جاییه که ایده‌ها به واقعیت تبدیل می‌شن. با طراحی مدرن، کد تمیز و تجربه‌ی کاربری بی‌نظیر،
+    پروژه‌هایت را به سطح بعدی می‌بریم.
+  </p>
+  <div class="hero-btns">
+    <a href="#features" class="btn btn-primary">شروع کنیم ←</a>
+    <a href="#contact" class="btn btn-outline">تماس با من</a>
+  </div>
+  <div class="scroll-down">↓</div>
+</section>
+
+<!-- ===== ویژگی‌ها ===== -->
+<section id="features">
+  <div class="section-title reveal">
+    <span>What I Do</span>
+    <h2>کاری که انجام می‌دهم</h2>
+  </div>
+  <div class="features">
+    <div class="card reveal">
+      <div class="card-icon">⚡</div>
+      <h3>سرعت بالا</h3>
+      <p>سایت‌هایی که در کمترین زمان ممکن لود می‌شن و تجربه‌ی روانی رو برای کاربر به ارمغان میارن.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🎨</div>
+      <h3>طراحی مدرن</h3>
+      <p>ظاهری زیبا، تمیز و حرفه‌ای که با جدیدترین ترندهای دنیای وب هماهنگه.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">📱</div>
+      <h3>ریسپانسیو کامل</h3>
+      <p>روی هر دستگاهی، از موبایل تا دسکتاپ، عالی و بی‌نقص نمایش داده می‌شه.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🔒</div>
+      <h3>امنیت بالا</h3>
+      <p>با رعایت اصول امنیتی، خیالت از اطلاعات و داده‌ها راحته.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🚀</div>
+      <h3>بهینه‌سازی SEO</h3>
+      <p>سایتت توی موتورهای جستجو رتبه‌ی بهتری می‌گیره و دیده می‌شه.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">💬</div>
+      <h3>پشتیبانی ۲۴/۷</h3>
+      <p>هر ساعتی از شبانه‌روز، آماده پاسخگویی و رفع مشکلات هستم.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== آمار ===== -->
+<section id="stats">
+  <div class="stats reveal">
+    <div class="stat">
+      <h3>+۵۰</h3>
+      <p>پروژه موفق</p>
+    </div>
+    <div class="stat">
+      <h3>+۳۰</h3>
+      <p>مشتری راضی</p>
+    </div>
+    <div class="stat">
+      <h3>+۵</h3>
+      <p>سال تجربه</p>
+    </div>
+    <div class="stat">
+      <h3>٪۹۹</h3>
+      <p>رضایت‌مندی</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== تماس ===== -->
+<section id="contact">
+  <div class="section-title reveal">
+    <span>Get In Touch</span>
+    <h2>با من در تماس باش</h2>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <h3>بیا یه پروژه‌ی خفن بسازیم 🚀</h3>
+      <p>اگه ایده‌ای داری یا می‌خوای با هم همکاری کنیم، همین الان پیام بده.</p>
+      <div class="contact-item">
+        <div class="ico">📧</div>
+        <span>cyberghost@example.com</span>
+      </div>
+      <div class="contact-item">
+        <div class="ico">📍</div>
+        <span>ایران، تهران</span>
+      </div>
+      <div class="contact-item">
+        <div class="ico">📱</div>
+        <span>۰۹۱۲ ۰۰۰ ۰۰۰۰</span>
+      </div>
+    </div>
+    <form class="reveal" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="نام و نام خانوادگی" required>
+      <input type="email" placeholder="ایمیل" required>
+      <textarea placeholder="پیام شما..." required></textarea>
+      <button type="submit" class="btn btn-primary">ارسال پیام ✉</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== فوتر ===== -->
+<footer>
+  <div class="socials">
+    <a href="#" title="GitHub">🐙</a>
+    <a href="#" title="Instagram">📷</a>
+    <a href="#" title="Telegram">✈</a>
+    <a href="#" title="Twitter">🐦</a>
+  </div>
+  <p>ساخته شده با ❤ توسط CyberGhost © ۲۰۲۶</p>
+</footer>
+
+<script>
+  // === منوی موبایل ===
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // === انیمیشن ورود با اسکرول ===
+  const revealElements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('active'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealElements.forEach(el => observer.observe(el));
+
+  // === تغییر نویگیشن هنگام اسکرول ===
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 50) {
+      nav.style.padding = '12px 5%';
+      nav.style.boxShadow = '0 10px 40px rgba(0,0,0,0.4)';
+    } else {
+      nav.style.padding = '18px 5%';
+      nav.style.boxShadow = 'none';
+    }
+  });
+
+  // === فرم تماس ===
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✓ ارسال شد!';
+    btn.style.background = 'linear-gradient(135deg, #00ffc8, #00b894)';
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+      e.target.reset();
+    }, 2500);
+  }
+
+  // === افکت موس روی کارت‌ها ===
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0,255,200,0.08), rgba(255,255,255,0.02) 60%)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.background = '';
+    });
+  });
+</script>
+</body>
+</html>
